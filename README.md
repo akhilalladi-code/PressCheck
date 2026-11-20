@@ -4,7 +4,7 @@
 
 ## Use it online — no installation
 
-**[Launch PressCheck](https://akhilalladi-code.github.io/PressCheck/)**
+**Website URL (after one-time Pages activation):** https://akhilalladi-code.github.io/PressCheck/
 
 The hosted GitHub Pages edition runs in your browser. Select a PDF, choose a print profile, inspect page dimensions and image paint operations, and export a JSON, CSV or HTML report. PDF bytes are processed in the browser and are not sent to a PressCheck server.
 
@@ -14,7 +14,7 @@ The hosted edition uses Mozilla PDF.js. It checks PDF readability, page dimensio
 
 - No Python, terminal, account or installation required.
 - A4 flyer, A3 poster, business-card and product-label page-size profiles, plus custom inspect-only mode.
-- Page-by-page dimensions and size mismatch findings.
+- Page-by-page visible page-box dimensions (PDF.js view box, not a certified TrimBox) and size mismatch findings.
 - Browser-side PDF processing; files are not uploaded to a backend.
 - JSON, CSV and standalone HTML exports.
 - Responsive interface for desktop and mobile browsers.
