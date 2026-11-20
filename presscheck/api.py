@@ -1,8 +1,10 @@
 """Local-only HTTP interface for the PressCheck web UI."""
 from pathlib import Path
+
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
-from .analyzer import analyze_pdf, PreflightError, MAX_FILE_BYTES
+
+from .analyzer import MAX_FILE_BYTES, analyze_pdf
 from .profiles import PROFILES
 
 app = FastAPI(title="PressCheck", version="1.0.0", docs_url=None, redoc_url=None)
