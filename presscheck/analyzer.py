@@ -1,9 +1,12 @@
 """PDF inspection engine. Findings are advisory and never claim PDF/X certification."""
 from __future__ import annotations
+
 from pathlib import Path
 from typing import Any
+
 import fitz
-from .profiles import PrintProfile, get_profile, PT_PER_MM
+
+from .profiles import get_profile, PT_PER_MM
 
 MAX_FILE_BYTES = 100 * 1024 * 1024
 
