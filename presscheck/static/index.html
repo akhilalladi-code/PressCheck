@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101b1a"><meta name="description" content="Local-first PDF print preflight. Inspect trim size, bleed, embedded fonts and image resolution without uploading artwork to a cloud service.">
+<title>PressCheck — PDF Print Preflight</title><link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/" aria-label="PressCheck home"><span class="brand-mark">P</span><span>PRESSCHECK<small>PRINT PREFLIGHT STUDIO</small></span></a><div class="privacy"><span class="pulse"></span> LOCAL WORKSPACE <span class="privacy-note">Your PDFs stay on this machine</span></div></header>
+<main class="shell">
+<section class="intro"><div><p class="eyebrow">PREPRESS, WITHOUT THE GUESSWORK</p><h1>Catch the details<br><em>before the press.</em></h1><p class="lede">A practical technical check for the PDFs you send to print. Inspect page geometry, bleed, font embedding and image resolution — privately, on your machine.</p></div><div class="intro-stamp"><span>01</span><b>CHECK<br>BEFORE<br>YOU SEND</b><i>↗</i></div></section>
+<section class="workspace" aria-labelledby="workspace-title"><div class="section-head"><div><p class="eyebrow">01 / CONFIGURE</p><h2 id="workspace-title">Set your print spec</h2></div><span class="step">SPECIFICATION</span></div>
+<div class="config-grid"><label>PRINT PROFILE<select id="profile"><option value="a4-flyer">A4 flyer · 210 × 297 mm</option><option value="a3-poster">A3 poster · 297 × 420 mm</option><option value="business-card">Business card · 90 × 54 mm</option><option value="label">Product label · 100 × 150 mm</option></select></label><label>MINIMUM IMAGE RESOLUTION<div class="input-suffix"><input id="dpi" type="number" min="72" max="1200" value="300"><span>DPI</span></div></label><div class="spec-note"><span class="spec-dot"></span><span id="spec-summary">3 mm bleed · 300 DPI · ±1 mm trim tolerance</span></div></div>
+<div class="section-head upload-head"><div><p class="eyebrow">02 / INSPECT</p><h2>Bring in your PDF</h2></div><span class="step">MAX 100 MB</span></div>
+<div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose or drop a PDF file"><input id="file" type="file" accept="application/pdf,.pdf" hidden><div class="upload-icon">↑</div><strong>Drop your production PDF here</strong><span>or <button type="button" id="browse" class="text-button">browse files</button></span><small>PDF only · Up to 100 MB · Processed locally</small></div>
+<div id="selected-file" class="selected-file" hidden><span class="file-icon">PDF</span><div><b id="file-name"></b><small id="file-size"></small></div><button id="remove-file" class="icon-button" aria-label="Remove selected file">×</button></div>
+<button id="run" class="run-button" disabled><span>Run preflight</span><span>↗</span></button><p id="error" class="error" role="alert" hidden></p><p id="progress" class="progress" role="status" hidden>Inspecting document locally…</p>
+</section>
+<section id="results" class="results" hidden aria-live="polite"><div class="section-head"><div><p class="eyebrow">03 / RESULTS</p><h2>Production report</h2></div><div class="export-actions"><button id="export-csv" class="outline-button">Export CSV ↓</button><button id="export-json" class="outline-button">Export JSON ↓</button><button id="export-html" class="outline-button">Save report ↓</button></div></div>
+<div class="report-title"><div><h3 id="report-name"></h3><p id="report-meta"></p></div><span id="report-status" class="status"></span></div><div id="metrics" class="metrics"></div><div class="report-columns"><div class="panel"><div class="panel-head"><h3>Findings</h3><span id="finding-count"></span></div><div id="findings" class="findings"></div></div><div class="panel"><div class="panel-head"><h3>Page inspection</h3><span id="page-count"></span></div><div id="pages" class="pages"></div></div></div>
+<div class="limitations"><b>READ THIS BEFORE RELEASE</b><p>This advisory report is not PDF/X certification. Bleed-box dimensions do not prove that background artwork extends to the edge. Color-space and output-intent compliance require a dedicated prepress review.</p></div></section>
+<footer><span>PRESSCHECK <span class="muted">·</span> BUILT FOR THE LAST MILE OF DESIGN</span><span>OPEN SOURCE <span class="muted">·</span> MIT LICENSE</span></footer>
+</main><script src="/app.js" defer></script>
+</body></html>
