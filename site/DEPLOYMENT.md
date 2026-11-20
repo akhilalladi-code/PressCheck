@@ -1,0 +1,1 @@
+PressCheck is deployed from this directory using the GitHub Actions Pages workflow. The hosted browser edition performs advisory page-size checks and image-operation reporting; use the local Python edition for advanced preflight checks.
