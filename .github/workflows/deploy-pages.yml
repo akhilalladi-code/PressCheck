@@ -5,6 +5,11 @@ on:
     paths:
       - "site/**"
       - ".github/workflows/deploy-pages.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,19 +23,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
       - name: Validate hosted assets
         run: |
           test -s site/index.html
           test -s site/app.js
+          test -s site/config.js
           test -s site/styles.css
-          node --check --input-type=module < site/app.js
-          grep -q "pdf.min.mjs" site/app.js
-          grep -q "IMPORTANT LIMITATIONS" site/index.html
+          node --check site/app.js
+          node --check site/config.js
+          grep -q "PRESSCHECK_API_BASE" site/config.js
+          grep -q "PDF UPLOAD & PRIVACY" site/index.html
       - name: Upload site artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: site
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
