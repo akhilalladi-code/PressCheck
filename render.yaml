@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: presscheck-api-akhilalladi
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install .
+    startCommand: uvicorn presscheck.api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: PRESSCHECK_ALLOWED_ORIGINS
+        value: https://akhilalladi-code.github.io
+      - key: PRESSCHECK_MAX_FILE_MB
+        value: "25"
