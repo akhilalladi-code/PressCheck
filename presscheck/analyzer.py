@@ -1,6 +1,7 @@
 """PDF inspection engine. Findings are advisory and never claim PDF/X certification."""
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -8,7 +9,10 @@ import fitz
 
 from .profiles import get_profile, PT_PER_MM
 
-MAX_FILE_BYTES = 100 * 1024 * 1024
+# The hosted free instance uses a lower cap to reduce memory pressure. Local installs
+# retain the original 100 MB default; deployments can override this with an env var.
+MAX_FILE_MB = max(1, int(os.getenv("PRESSCHECK_MAX_FILE_MB", "100")))
+MAX_FILE_BYTES = MAX_FILE_MB * 1024 * 1024
 
 class PreflightError(ValueError):
     """Raised when an uploaded document cannot be inspected safely."""
@@ -20,7 +24,7 @@ def analyze_pdf(source: str | Path | bytes, profile_id: str = "a4-flyer", min_dp
     profile = get_profile(profile_id)
     if isinstance(source, bytes):
         if len(source) > MAX_FILE_BYTES:
-            raise PreflightError("File exceeds the 100 MB inspection limit.")
+            raise PreflightError(f"File exceeds the {MAX_FILE_MB} MB inspection limit.")
         if not source.startswith(b"%PDF-"):
             raise PreflightError("The uploaded file does not have a valid PDF signature.")
         payload: Any = source
@@ -29,7 +33,7 @@ def analyze_pdf(source: str | Path | bytes, profile_id: str = "a4-flyer", min_dp
         if not path.is_file():
             raise PreflightError("PDF file does not exist.")
         if path.stat().st_size > MAX_FILE_BYTES:
-            raise PreflightError("File exceeds the 100 MB inspection limit.")
+            raise PreflightError(f"File exceeds the {MAX_FILE_MB} MB inspection limit.")
         payload = str(path)
     try:
         doc = fitz.open(stream=payload, filetype="pdf") if isinstance(payload, bytes) else fitz.open(payload)
