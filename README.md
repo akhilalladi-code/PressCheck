@@ -1,33 +1,38 @@
 # PressCheck
 
-**A browser-based PDF page-size checker plus an advanced local Python preflight toolkit for designers and print-production teams.**
+**A browser-accessible PDF print preflight powered by a Python/FastAPI and PyMuPDF backend, with a command-line edition for batch work.**
 
-## Use it online — no installation
+## Use it online
 
-**Website URL (after one-time Pages activation):** https://akhilalladi-code.github.io/PressCheck/
+**Website:** https://akhilalladi-code.github.io/PressCheck/
 
-The hosted GitHub Pages edition runs in your browser. Select a PDF, choose a print profile, inspect page dimensions and image paint operations, and export a JSON, CSV or HTML report. PDF bytes are processed in the browser and are not sent to a PressCheck server.
+The GitHub Pages frontend connects to a separately hosted Python API. It inspects PDF page boxes, trim size, bleed, embedded fonts and effective raster-image DPI. The hosted service currently accepts PDF files up to 25 MB on its free compute configuration.
 
-The hosted edition uses Mozilla PDF.js. It checks PDF readability, page dimensions and image paint operations. It does **not** reliably inspect TrimBox/BleedBox, font embedding, effective image DPI, color spaces, output intent or PDF/X compliance. Do not treat a green result as print certification.
+### First-time backend deployment (Render)
 
-## Hosted edition
+1. Create a free account at [Render](https://render.com/).
+2. In the Render dashboard choose **New → Blueprint**.
+3. Connect the GitHub repository `akhilalladi-code/PressCheck`.
+4. Render detects the root `render.yaml`. Review the service named `presscheck-api-akhilalladi` and deploy it on the **Free** plan.
+5. Wait for the first deploy to finish. The API address should be `https://presscheck-api-akhilalladi.onrender.com`.
+6. Open `https://presscheck-api-akhilalladi.onrender.com/api/health`; it should return JSON with `"status":"ok"` and `"engine":"python"`.
 
-- No Python, terminal, account or installation required.
-- A4 flyer, A3 poster, business-card and product-label page-size profiles, plus custom inspect-only mode.
-- Page-by-page visible page-box dimensions (PDF.js view box, not a certified TrimBox) and size mismatch findings.
-- Browser-side PDF processing; files are not uploaded to a backend.
-- JSON, CSV and standalone HTML exports.
-- Responsive interface for desktop and mobile browsers.
+The Pages frontend is configured to use that API URL in `site/config.js`. If Render assigns a different hostname, update that file to the actual `onrender.com` URL and commit the change. The Pages workflow will redeploy automatically.
+
+### Free-tier behavior and limits
+
+- Render's free web services sleep after 15 minutes without traffic; the first request after sleep can take around one minute to wake the service.
+- The free service may restart at any time and has limited CPU and memory. The hosted API therefore caps PDFs at 25 MB.
+- Render documents 750 free instance hours per workspace per calendar month. Usage, bandwidth and pipeline limits apply.
+- This is suitable for a personal/hobby project, not a production service with uptime guarantees. See [Render's current free-instance limits](https://render.com/docs/free).
+
+### Upload privacy
+
+The hosted frontend sends the selected PDF over HTTPS to the PressCheck API for analysis. The API does not maintain a document library and closes the uploaded file after processing. Render free services have ephemeral filesystems, but do not upload confidential, regulated or sensitive documents to this public demo. Operational request metadata may be handled under Render's own service policies.
 
 ## Advanced local edition
 
-The repository also contains a Python/FastAPI edition for deeper preflight checks:
-
-- MediaBox, TrimBox and BleedBox inspection.
-- Font embedding checks.
-- Effective raster-image DPI estimates.
-- Batch folder inspection and command-line exit codes.
-- JSON reports and per-page findings.
+The same Python engine can run locally without sending files to a cloud service.
 
 ### Requirements
 
@@ -55,7 +60,7 @@ Open **http://127.0.0.1:8765**. Keep the service bound to loopback; do not expos
 
 Exit code 0 means no errors were found (and no warnings when --fail-on-warning is used); exit code 1 means a file failed a check.
 
-## Built-in local profiles
+## Built-in print profiles
 
 | Profile | Trim size | Bleed target | Default image resolution |
 |---|---:|---:|---:|
@@ -68,24 +73,16 @@ These are starter specifications, not universal printer requirements. Confirm di
 
 ## Development and tests
 
-    python -m pip install -e '.[dev]'
+    python -m pip install -e ".[dev]"
     ruff check . --select E4,E7,E9,F
     python -m compileall -q presscheck
     pytest -q
 
-GitHub Actions validates the Python package and tests. A separate workflow validates the static browser app and deploys it to GitHub Pages when files under site/ change.
-
-## Privacy and security
-
-- Hosted mode processes PDF bytes in the browser and does not upload them to a PressCheck API.
-- The hosted PDF.js library is loaded from cdnjs; using the site therefore requires an internet connection.
-- Local API mode is intended for single-user use and binds to 127.0.0.1.
-- Local API uploads are limited to 100 MB and are held in memory for analysis.
-- Do not expose the local API to a public network without authentication, request limits and a reviewed threat model.
+GitHub Actions runs the Python tests and validates/deploys the static frontend.
 
 ## Important disclaimer
 
-PressCheck is an advisory tool, not a PDF/X validator or a substitute for your printer's approved prepress workflow. PDF page boxes do not prove that artwork visually extends through bleed. Always request and follow your printer's current PDF export specification.
+PressCheck is an advisory tool, not a PDF/X validator or a substitute for your printer's approved prepress workflow. PDF page boxes do not prove that artwork visually extends through bleed. Color-space and output-intent compliance are not certified.
 
 ## License
 
