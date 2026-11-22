@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-import fitz
+import pymupdf as fitz
 
 from .profiles import get_profile, PT_PER_MM
 
