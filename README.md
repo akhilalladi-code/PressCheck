@@ -6,18 +6,19 @@
 
 **Website:** https://akhilalladi-code.github.io/PressCheck/
 
-The GitHub Pages frontend connects to a separately hosted Python API. It inspects PDF page boxes, trim size, bleed, embedded fonts and effective raster-image DPI. The hosted service currently accepts PDF files up to 25 MB on its free compute configuration.
+The GitHub Pages frontend connects to the deployed Python API at https://presscheck-api-akhilalladi-tamq.onrender.com. It inspects PDF page boxes, trim size, bleed, embedded fonts and effective raster-image DPI. The hosted service currently accepts PDF files up to 25 MB on its free compute configuration.
 
-### First-time backend deployment (Render)
+### Hosted backend (Render)
 
-1. Create a free account at [Render](https://render.com/).
-2. In the Render dashboard choose **New → Blueprint**.
-3. Connect the GitHub repository `akhilalladi-code/PressCheck`.
-4. Render detects the root `render.yaml`. Review the service named `presscheck-api-akhilalladi` and deploy it on the **Free** plan.
-5. Wait for the first deploy to finish. The API address should be `https://presscheck-api-akhilalladi.onrender.com`.
-6. Open `https://presscheck-api-akhilalladi.onrender.com/api/health`; it should return JSON with `"status":"ok"` and `"engine":"python"`.
+The production Blueprint is connected to this repository's `main` branch and manages the service `presscheck-api-akhilalladi-tamq` in the Singapore region.
 
-The Pages frontend is configured to use that API URL in `site/config.js`. If Render assigns a different hostname, update that file to the actual `onrender.com` URL and commit the change. The Pages workflow will redeploy automatically.
+- **API base URL:** https://presscheck-api-akhilalladi-tamq.onrender.com
+- **Health endpoint:** https://presscheck-api-akhilalladi-tamq.onrender.com/api/health
+- **Health response:** JSON with `"status":"ok"` and `"engine":"python"`
+- **Deployment configuration:** [render.yaml](render.yaml)
+- **Render dashboard:** https://dashboard.render.com/web/srv-dc0g4i4s728c73a5n6kg
+
+The frontend endpoint is configured in `site/config.js`. If the service is recreated and Render assigns a different hostname, update that file and the `PRESSCHECK_API_BASE_URL` used by the CI smoke test, then push to `main`.
 
 ### Free-tier behavior and limits
 
@@ -78,7 +79,7 @@ These are starter specifications, not universal printer requirements. Confirm di
     python -m compileall -q presscheck
     pytest -q
 
-GitHub Actions runs the Python tests and validates/deploys the static frontend.
+GitHub Actions runs the Python tests and validates/deploys the static frontend. The main-branch CI also performs a live API smoke test: it checks health and profiles, generates a disposable one-page PDF, uploads it to `/api/preflight`, and validates the returned report.
 
 ## Important disclaimer
 
