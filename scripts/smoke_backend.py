@@ -10,7 +10,7 @@ import urllib.error
 import urllib.request
 import uuid
 
-import fitz
+import pymupdf as fitz
 
 DEFAULT_API_BASE = "https://presscheck-api-akhilalladi-tamq.onrender.com"
 API_BASE = os.getenv("PRESSCHECK_API_BASE_URL", DEFAULT_API_BASE).rstrip("/")
