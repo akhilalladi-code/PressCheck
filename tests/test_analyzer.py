@@ -1,4 +1,4 @@
-import fitz
+import pymupdf as fitz
 import pytest
 
 from presscheck.analyzer import MAX_FILE_BYTES, PreflightError, analyze_pdf
